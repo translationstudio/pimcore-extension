@@ -5,6 +5,7 @@ This plugin allows you to add enterprise translation management to your Pimcore 
 > [!IMPORTANT]
 > You will need a [translationstudio.tech](https://translationstudio.tech) subscription
 
+Developed by Leander Klein <leander.klein@idmedia.com>
 
 ## Installation
 
