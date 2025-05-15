@@ -1,0 +1,1 @@
+tsc --watch ./src/translationstudio.ts --outFile ./Idmedia/TranslationstudioBundle/public/js/translationstudio.js
