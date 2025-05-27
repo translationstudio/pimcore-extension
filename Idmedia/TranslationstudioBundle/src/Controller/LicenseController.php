@@ -42,7 +42,7 @@ class LicenseController extends AbstractController
         $licenseSetting = SettingsStore::get('license');
         $license = $licenseSetting ? $licenseSetting->getData() : null;
         if (!$license) {
-            return new JsonResponse(['error' => 'No License saved yet'], 404);
+            return new JsonResponse(['license' => ''], 200);
         }
         return new JsonResponse(['license'=> $license], 200);
     }
@@ -61,7 +61,7 @@ class LicenseController extends AbstractController
         $apiSetting = SettingsStore::get('api');
         $api = $apiSetting ? $apiSetting->getData() : null;
         if (!$api) {
-            return new JsonResponse(['error' => 'No API available yet'], 404);
+            return new JsonResponse(['api' => ''], 200);
         }
         return new JsonResponse(['api'=> $api], 200);
     }
