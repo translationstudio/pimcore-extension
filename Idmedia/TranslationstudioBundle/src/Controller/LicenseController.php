@@ -32,14 +32,14 @@ class LicenseController extends AbstractController
     public function saveLicense(Request $request): JsonResponse
     {
         $license = $request->request->get('license')?:$request->request->get('license');
-        SettingsStore::set('license', $license);
+        SettingsStore::set('tslicense', $license);
         return new JsonResponse(204);
     }
     
     #[Route('/translationstudio/pimcore/license', methods: ['GET'])]
     public function getLicense(): JsonResponse
     {
-        $licenseSetting = SettingsStore::get('license');
+        $licenseSetting = SettingsStore::get('tslicense');
         $license = $licenseSetting ? $licenseSetting->getData() : null;
         if (!$license) {
             return new JsonResponse(['license' => ''], 200);
@@ -51,18 +51,18 @@ class LicenseController extends AbstractController
     public function createApi(): JsonResponse
     {
         $api = bin2hex(random_bytes(32));
-        SettingsStore::set('api', $api);
+        SettingsStore::set('tsapi', $api);
         return new JsonResponse(['success' => $api], 200);
     }
 
     #[Route('/translationstudio/pimcore/apikey', methods: ['GET'])]
     public function getApi(): JsonResponse
     {
-        $apiSetting = SettingsStore::get('api');
+        $apiSetting = SettingsStore::get('tsapi');
         $api = $apiSetting ? $apiSetting->getData() : null;
         if (!$api) {
             $api = bin2hex(random_bytes(32));
-            SettingsStore::set('api', $api);
+            SettingsStore::set('tsapi', $api);
         }
         return new JsonResponse(['api'=> $api], 200);
     }
@@ -70,14 +70,25 @@ class LicenseController extends AbstractController
     #[Route("/translationstudio/pimcore/get-user-info", methods: ["GET"])]
     public function getUserInfo(RequestStack $requestStack): JsonResponse
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $pimcoreUser = User::getById($user->getId());
-        if (!$user) {
-            return new JsonResponse(["message" => "Keine email gefunden"], 404);
+        try {
+            /** @var User $user */
+            $user = $this->getUser();
+            if (!$user) {
+                return new JsonResponse(["message" => "Keine email gefunden"], 500);
+            }
+
+            $pimcoreUser = User::getById($user->getId());
+            if ($pimcoreUser)
+            {
+                $session = $requestStack->getSession();
+                $session->set('userEmail', $pimcoreUser->getEmail());
+            }
+
+            return new JsonResponse([], 204);
         }
-        $session = $requestStack->getSession();
-        $session->set('userEmail', $pimcoreUser->getEmail());
-        return new JsonResponse([], 204);
+        catch(Exception $exIgnore) 
+        {
+            return new JsonResponse([], 500);
+        }
     }
 }
