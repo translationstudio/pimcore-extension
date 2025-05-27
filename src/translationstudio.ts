@@ -61,7 +61,9 @@ class IdmediatranslationstudioBundleSettings {
 
     Ext.Ajax.request({
       url: "/translationstudio/pimcore/get-user-info",
-      method: "POST",
+      method: "GET",
+      success: () => { console.warn("Email address available."); },
+      failure: () => { console.warn("No email address found. You will not receive email updates."); }
     });
 
     toolbar.settingsMenu.add({

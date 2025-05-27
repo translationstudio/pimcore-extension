@@ -67,7 +67,7 @@ class LicenseController extends AbstractController
         return new JsonResponse(['api'=> $api], 200);
     }
 
-    #[Route("/translationstudio/pimcore/get-user-info", methods: ["POST"])]
+    #[Route("/translationstudio/pimcore/get-user-info", methods: ["GET"])]
     public function getUserInfo(RequestStack $requestStack): JsonResponse
     {
         /** @var User $user */
