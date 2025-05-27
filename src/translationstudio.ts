@@ -60,7 +60,7 @@ class IdmediatranslationstudioBundleSettings {
     if (typeof toolbar === "undefined" || !toolbar) return;
 
     Ext.Ajax.request({
-      url: "/admin/get-user-info",
+      url: "/translationstudio/pimcore/get-user-info",
       method: "POST",
     });
 
@@ -189,7 +189,7 @@ class IdmediatranslationstudioBundleSettings {
           const apiField = pthis.down("#apiField");
 
           Ext.Ajax.request({
-            url: "/get-license",
+            url: "/translationstudio/pimcore/license",
             method: "GET",
             success: function (response: any) {
               licenseField.setValue(Ext.decode(response.responseText).license);
@@ -199,14 +199,10 @@ class IdmediatranslationstudioBundleSettings {
             },
           });
           Ext.Ajax.request({
-            url: "/get-api",
+            url: "/translationstudio/pimcore/apikey",
             method: "GET",
-            success: function (response: any) {
-              apiField.setValue(Ext.decode(response.responseText).api);
-            },
-            failure: function () {
-              apiField.setValue("No API key generated yet.");
-            },
+            success: (response: any) => apiField.setValue(Ext.decode(response.responseText).api),
+            failure: () => { /* ignore */}
           });
         },
       },
@@ -228,19 +224,13 @@ class IdmediatranslationstudioBundleSettings {
               ?.getValue();
 
             Ext.Ajax.request({
-              url: "/save-license",
+              url: "/translationstudio/pimcore/license", 
               method: "POST",
               params: {
                 license: licenseValue,
               },
-              success: () =>
-                IdmediatranslationstudioBundleBase.showSuccessMessage(
-                  "Lizenz wurde gespeichert."
-                ),
-              failure: () =>
-                IdmediatranslationstudioBundleBase.showErrorMessage(
-                  "Lizenz konnte nicht gespeichert werden."
-                ),
+              success: () => IdmediatranslationstudioBundleBase.showSuccessMessage("License saved."),
+              failure: () => IdmediatranslationstudioBundleBase.showErrorMessage("Could not save license."),
             });
           },
         },
@@ -252,21 +242,10 @@ class IdmediatranslationstudioBundleSettings {
 
   static __generateAndAddApiKey(apiField: any) {
     Ext.Ajax.request({
-      url: "/create-api",
+      url: "/translationstudio/pimcore/apikey",
       method: "POST",
-      success: function () {
-        Ext.Ajax.request({
-          url: "/get-api",
-          method: "GET",
-          success: function (response: any) {
-            apiField.setValue(Ext.decode(response.responseText).api);
-          },
-        });
-      },
-      failure: () =>
-        IdmediatranslationstudioBundleBase.showErrorMessage(
-          "API konnte nicht gespeichert werden."
-        ),
+      success: (response: any) => apiField.setValue(Ext.decode(response.responseText).api),      
+      failure: () => { /** ignore */ }
     });
   }
 
@@ -514,7 +493,7 @@ class IdmediatranslationstudioBundleTranslationRequest extends Idmediatranslatio
       );
 
     Ext.Ajax.request({
-      url: "/request-translation",
+      url: "/translationstudio/pimcore/request-translation",
       method: "POST",
       params: {
         id: currentObjectId,
@@ -524,10 +503,7 @@ class IdmediatranslationstudioBundleTranslationRequest extends Idmediatranslatio
         notification: notificationCheckbox.getValue(),
       },
       success: () => window.close(),
-      failure: (response: any) =>
-        IdmediatranslationstudioBundleBase.showErrorMessage(
-          `Serverfehler: ${response.statusText}`
-        ),
+      failure: () => IdmediatranslationstudioBundleBase.showErrorMessage("Could not submit request"),
     });
   }
 
@@ -540,17 +516,14 @@ class IdmediatranslationstudioBundleTranslationRequest extends Idmediatranslatio
 
   __loadTranslationLanguages(onResult: Function) {
     Ext.Ajax.request({
-      url: "/get-ts-languages",
+      url: "/translationstudio/pimcore/mappings",
       method: "GET",
       success: function (response: any) {
         const data = Ext.decode(response.responseText);
         languageStore.loadData(data);
         onResult();
       },
-      failure: () =>
-        IdmediatranslationstudioBundleBase.showErrorMessage(
-          "Fehler beim Abrufen der Sprachen"
-        ),
+      failure: () => { /* ignore */}
     });
   }
 

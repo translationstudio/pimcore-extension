@@ -65,7 +65,7 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
         if (typeof toolbar === "undefined" || !toolbar)
             return;
         Ext.Ajax.request({
-            url: "/admin/get-user-info",
+            url: "/translationstudio/pimcore/get-user-info",
             method: "POST",
         });
         toolbar.settingsMenu.add({
@@ -187,7 +187,7 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                     var licenseField = pthis.down("#licenseField");
                     var apiField = pthis.down("#apiField");
                     Ext.Ajax.request({
-                        url: "/get-license",
+                        url: "/translationstudio/pimcore/license",
                         method: "GET",
                         success: function (response) {
                             licenseField.setValue(Ext.decode(response.responseText).license);
@@ -197,14 +197,10 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                         },
                     });
                     Ext.Ajax.request({
-                        url: "/get-api",
+                        url: "/translationstudio/pimcore/apikey",
                         method: "GET",
-                        success: function (response) {
-                            apiField.setValue(Ext.decode(response.responseText).api);
-                        },
-                        failure: function () {
-                            apiField.setValue("No API key generated yet.");
-                        },
+                        success: function (response) { return apiField.setValue(Ext.decode(response.responseText).api); },
+                        failure: function () { }
                     });
                 },
             },
@@ -225,17 +221,13 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                         var licenseValue = (_a = window
                             .down('textarea[name="licenseField"]')) === null || _a === void 0 ? void 0 : _a.getValue();
                         Ext.Ajax.request({
-                            url: "/save-license",
+                            url: "/translationstudio/pimcore/license",
                             method: "POST",
                             params: {
                                 license: licenseValue,
                             },
-                            success: function () {
-                                return IdmediatranslationstudioBundleBase.showSuccessMessage("Lizenz wurde gespeichert.");
-                            },
-                            failure: function () {
-                                return IdmediatranslationstudioBundleBase.showErrorMessage("Lizenz konnte nicht gespeichert werden.");
-                            },
+                            success: function () { return IdmediatranslationstudioBundleBase.showSuccessMessage("License saved."); },
+                            failure: function () { return IdmediatranslationstudioBundleBase.showErrorMessage("Could not save license."); },
                         });
                     },
                 },
@@ -245,20 +237,10 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
     };
     IdmediatranslationstudioBundleSettings.__generateAndAddApiKey = function (apiField) {
         Ext.Ajax.request({
-            url: "/create-api",
+            url: "/translationstudio/pimcore/apikey",
             method: "POST",
-            success: function () {
-                Ext.Ajax.request({
-                    url: "/get-api",
-                    method: "GET",
-                    success: function (response) {
-                        apiField.setValue(Ext.decode(response.responseText).api);
-                    },
-                });
-            },
-            failure: function () {
-                return IdmediatranslationstudioBundleBase.showErrorMessage("API konnte nicht gespeichert werden.");
-            },
+            success: function (response) { return apiField.setValue(Ext.decode(response.responseText).api); },
+            failure: function () { }
         });
     };
     IdmediatranslationstudioBundleSettings.prototype.__onHandlePimcoreReadyLicense = function () {
@@ -472,7 +454,7 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
             IdmediatranslationstudioBundleTranslationRequest.__isUrgentRequest(window);
         var jsonLanguages = IdmediatranslationstudioBundleTranslationRequest.__transformLanguageData(selectedRecord.data);
         Ext.Ajax.request({
-            url: "/request-translation",
+            url: "/translationstudio/pimcore/request-translation",
             method: "POST",
             params: {
                 id: currentObjectId,
@@ -482,9 +464,7 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
                 notification: notificationCheckbox.getValue(),
             },
             success: function () { return window.close(); },
-            failure: function (response) {
-                return IdmediatranslationstudioBundleBase.showErrorMessage("Serverfehler: ".concat(response.statusText));
-            },
+            failure: function () { return IdmediatranslationstudioBundleBase.showErrorMessage("Could not submit request"); },
         });
     };
     IdmediatranslationstudioBundleTranslationRequest.prototype.__onShowWindow = function (ele) {
@@ -496,16 +476,14 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
     };
     IdmediatranslationstudioBundleTranslationRequest.prototype.__loadTranslationLanguages = function (onResult) {
         Ext.Ajax.request({
-            url: "/get-ts-languages",
+            url: "/translationstudio/pimcore/mappings",
             method: "GET",
             success: function (response) {
                 var data = Ext.decode(response.responseText);
                 languageStore.loadData(data);
                 onResult();
             },
-            failure: function () {
-                return IdmediatranslationstudioBundleBase.showErrorMessage("Fehler beim Abrufen der Sprachen");
-            },
+            failure: function () { }
         });
     };
     IdmediatranslationstudioBundleTranslationRequest.prototype.onReady = function (ele) {

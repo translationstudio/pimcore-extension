@@ -28,15 +28,15 @@ use Pimcore\Model\User;
 
 class LicenseController extends AbstractController
 {
-    #[Route('/save-license', methods: ['POST'])]
+    #[Route('/translationstudio/pimcore/license', methods: ['POST'])]
     public function saveLicense(Request $request): JsonResponse
     {
         $license = $request->request->get('license')?:$request->request->get('license');
         SettingsStore::set('license', $license);
-        return new JsonResponse(['success' => 'Lizenz gespeichert'], 200);
+        return new JsonResponse(204);
     }
     
-    #[Route('/get-license', methods: ['GET'])]
+    #[Route('/translationstudio/pimcore/license', methods: ['GET'])]
     public function getLicense(): JsonResponse
     {
         $licenseSetting = SettingsStore::get('license');
@@ -47,26 +47,27 @@ class LicenseController extends AbstractController
         return new JsonResponse(['license'=> $license], 200);
     }
 
-    #[Route('/create-api', methods: ['POST'])]
+    #[Route('/translationstudio/pimcore/apikey', methods: ['POST'])]
     public function createApi(): JsonResponse
     {
         $api = bin2hex(random_bytes(32));
         SettingsStore::set('api', $api);
-        return new JsonResponse(['success' => 'Erfolgreich'], 200);
+        return new JsonResponse(['success' => $api], 200);
     }
 
-    #[Route('/get-api', methods: ['GET'])]
+    #[Route('/translationstudio/pimcore/apikey', methods: ['GET'])]
     public function getApi(): JsonResponse
     {
         $apiSetting = SettingsStore::get('api');
         $api = $apiSetting ? $apiSetting->getData() : null;
         if (!$api) {
-            return new JsonResponse(['api' => ''], 200);
+            $api = bin2hex(random_bytes(32));
+            SettingsStore::set('api', $api);
         }
         return new JsonResponse(['api'=> $api], 200);
     }
 
-    #[Route("/admin/get-user-info", methods: ["POST"])]
+    #[Route("/translationstudio/pimcore/get-user-info", methods: ["POST"])]
     public function getUserInfo(RequestStack $requestStack): JsonResponse
     {
         /** @var User $user */

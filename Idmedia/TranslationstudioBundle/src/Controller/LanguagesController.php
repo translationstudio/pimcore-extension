@@ -37,7 +37,7 @@ class LanguagesController extends AbstractController
         $this->apiAuthorizationService = $apiAuthorizationService;
     }
 
-    #[Route('/get-ts-languages', methods: ['GET'])]
+    #[Route('/translationstudio/pimcore/mappings', methods: ['GET'])]
     public function getLanguages(LanguagesService $languagesService): JsonResponse
     {
         $license = SettingsStore::get('license')?SettingsStore::get('license')->getData():'';

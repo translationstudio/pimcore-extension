@@ -29,7 +29,7 @@ class RequestTranslationControllerTest extends WebTestCase
 
     public function testRequestTranslation(): void
     {
-        $this->client->request('POST', '/request-translation', [
+        $this->client->request('POST', '/translationstudio/pimcore/request-translation', [
             'id' => 'test-id',
             'machine' => 'true',
             'language' => 'de',

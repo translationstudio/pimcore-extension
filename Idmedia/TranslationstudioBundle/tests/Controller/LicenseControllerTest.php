@@ -40,7 +40,7 @@ class LicenseControllerTest extends WebTestCase
                           ->with('license', 'test-license');
 
         // Simuliere eine POST-Anfrage, um die Lizenz zu speichern
-        $this->client->request('POST', '/save-license', ['license' => 'test-license']);
+        $this->client->request('POST', '/translationstudio/pimcore/license', ['license' => 'test-license']);
 
         // Überprüfen, ob die Antwort den erwarteten Erfolg enthält
         $this->assertResponseIsSuccessful();
@@ -57,7 +57,7 @@ class LicenseControllerTest extends WebTestCase
                           ->willReturn('test-license');
 
         // Simuliere eine GET-Anfrage, um die Lizenz abzurufen
-        $this->client->request('GET', '/get-license');
+        $this->client->request('GET', '/translationstudio/pimcore/license');
 
         // Überprüfen, ob die Antwort den erwarteten Lizenzwert enthält
         $this->assertResponseIsSuccessful();
@@ -73,7 +73,7 @@ class LicenseControllerTest extends WebTestCase
                           ->with('api', $this->isType('string'));
 
         // Simuliere eine POST-Anfrage, um den API-Schlüssel zu erstellen
-        $this->client->request('POST', '/create-api');
+        $this->client->request('POST', '/translationstudio/pimcore/apikey');
 
         // Überprüfen, ob die Antwort den erwarteten Erfolg enthält
         $this->assertResponseIsSuccessful();
@@ -91,7 +91,7 @@ class LicenseControllerTest extends WebTestCase
                           ->willReturn('test-api-key');
 
         // Simuliere eine GET-Anfrage, um den API-Schlüssel abzurufen
-        $this->client->request('GET', '/get-api');
+        $this->client->request('GET', '/translationstudio/pimcore/apikey');
 
         // Überprüfen, ob die Antwort den erwarteten API-Schlüssel enthält
         $this->assertResponseIsSuccessful();

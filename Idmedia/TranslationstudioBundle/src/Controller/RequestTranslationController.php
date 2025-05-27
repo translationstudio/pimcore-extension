@@ -34,14 +34,10 @@ class RequestTranslationController
         $this->requestTranslationService = $requestTranslationService;
     }
 
-    #[Route('/request-translation', methods: ['POST'])]
+    #[Route('/translationstudio/pimcore/request-translation', methods: ['POST'])]
     public function sendTranslationRequest(Request $request): JsonResponse
     {
         $response = $this->requestTranslationService->requestTranslation($request);
-   
-        return new JsonResponse([
-            'message' => $response
-        ], 200);
-    
+        return new JsonResponse(204);    
     }
 }
