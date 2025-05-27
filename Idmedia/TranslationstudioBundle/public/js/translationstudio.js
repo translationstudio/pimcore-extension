@@ -41,7 +41,7 @@ var languageStore = Ext.create("Ext.data.Store", {
         { name: "targets", type: "auto" },
         { name: "machine", type: "boolean" },
     ],
-    data: []
+    data: [],
 });
 var URL_TRANSLATIONSTUDIO_LOGO = "https://www.translationstudio.tech/assets/logos/ts_logo_farbig.svg";
 var IdmediatranslationstudioBundleBase = /** @class */ (function () {
@@ -66,12 +66,12 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
             return;
         Ext.Ajax.request({
             url: "/admin/get-user-info",
-            method: "POST"
+            method: "POST",
         });
         toolbar.settingsMenu.add({
             text: "translationstudio",
             iconCls: "translationstudio-icon",
-            handler: this.__onHandlePimcoreReadyLicense.bind(this)
+            handler: this.__onHandlePimcoreReadyLicense.bind(this),
         });
     };
     IdmediatranslationstudioBundleSettings.prototype.__createLicenseWindow = function () {
@@ -82,7 +82,7 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
             layout: {
                 type: "vbox",
                 align: "center",
-                justify: "center"
+                justify: "center",
             },
             bodyStyle: "background-color: white;",
             items: [
@@ -91,7 +91,7 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                     layout: {
                         type: "hbox",
                         align: "center",
-                        pack: "center"
+                        pack: "center",
                     },
                     bodyStyle: "background-color: white;",
                     items: [
@@ -101,14 +101,14 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                             width: 400,
                             height: 195,
                             alt: "",
-                            margin: "10 0 10 0"
+                            margin: "10 0 10 0",
                         },
-                    ]
+                    ],
                 },
                 {
                     xtype: "container",
                     layout: {
-                        type: "vbox"
+                        type: "vbox",
                     },
                     margin: "10 0 0 0",
                     items: [
@@ -116,7 +116,7 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                             xtype: "label",
                             value: "Lizenz",
                             html: "<span style='color: black; font-size: 14px; font-weight: normal;'>translationstudio license</span>",
-                            margin: "0 0 10 0"
+                            margin: "0 0 10 0",
                         },
                         {
                             xtype: "textarea",
@@ -124,14 +124,14 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                             width: 670,
                             itemId: "licenseField",
                             border: 2,
-                            fieldStyle: "border: 2px solid __ea4443;"
+                            fieldStyle: "border: 2px solid __ea4443;",
                         },
-                    ]
+                    ],
                 },
                 {
                     xtype: "container",
                     layout: {
-                        type: "vbox"
+                        type: "vbox",
                     },
                     width: 670,
                     items: [
@@ -139,21 +139,21 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                             xtype: "displayfield",
                             value: "You can create or revoke a license at account.translationstdio.tech <a href='https://account.translationstudio.tech' target='_blank'>account.translationstudio.tech</a> an.",
                             anchor: "100%",
-                            margin: "0 0 10 0"
+                            margin: "0 0 10 0",
                         },
                         {
                             xtype: "label",
                             value: "Lizenz",
                             html: "<span style='color: black; font-size: 14px; font-weight: normal;'>Authorize incoming translationstudio conection against this access key</span>",
-                            margin: "0 0 10 0"
+                            margin: "0 0 10 0",
                         },
-                    ]
+                    ],
                 },
                 {
                     xtype: "container",
                     layout: {
                         type: "vbox",
-                        align: "middle"
+                        align: "middle",
                     },
                     margin: "0 0 10 0",
                     items: [
@@ -165,7 +165,7 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                             itemId: "apiField",
                             readOnly: true,
                             margin: "0 0 10 0",
-                            fieldStyle: "border: 2px solid __ea4443;"
+                            fieldStyle: "border: 2px solid __ea4443;",
                         },
                         {
                             xtype: "button",
@@ -176,9 +176,9 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                                 var apiField = pthis.up("container").down("#apiField");
                                 if (apiField)
                                     IdmediatranslationstudioBundleSettings.__generateAndAddApiKey(apiField);
-                            }
+                            },
                         },
-                    ]
+                    ],
                 },
             ],
             listeners: {
@@ -194,7 +194,7 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                         },
                         failure: function () {
                             apiField.setValue("No license saved yet.");
-                        }
+                        },
                     });
                     Ext.Ajax.request({
                         url: "/get-api",
@@ -204,18 +204,18 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                         },
                         failure: function () {
                             apiField.setValue("No API key generated yet.");
-                        }
+                        },
                     });
-                }
+                },
             },
             buttons: [
                 {
                     text: "Cancel",
-                    handler: function () { return window.close(); }
+                    handler: function () { return window.close(); },
                 },
                 {
                     xtype: "component",
-                    flex: 1
+                    flex: 1,
                 },
                 {
                     flex: 0.2,
@@ -228,18 +228,18 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                             url: "/save-license",
                             method: "POST",
                             params: {
-                                license: licenseValue
+                                license: licenseValue,
                             },
                             success: function () {
                                 return IdmediatranslationstudioBundleBase.showSuccessMessage("Lizenz wurde gespeichert.");
                             },
                             failure: function () {
                                 return IdmediatranslationstudioBundleBase.showErrorMessage("Lizenz konnte nicht gespeichert werden.");
-                            }
+                            },
                         });
-                    }
+                    },
                 },
-            ]
+            ],
         });
         return window;
     };
@@ -253,12 +253,12 @@ var IdmediatranslationstudioBundleSettings = /** @class */ (function () {
                     method: "GET",
                     success: function (response) {
                         apiField.setValue(Ext.decode(response.responseText).api);
-                    }
+                    },
                 });
             },
             failure: function () {
                 return IdmediatranslationstudioBundleBase.showErrorMessage("API konnte nicht gespeichert werden.");
-            }
+            },
         });
     };
     IdmediatranslationstudioBundleSettings.prototype.__onHandlePimcoreReadyLicense = function () {
@@ -282,7 +282,7 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
                 boxLabel: record.get("name"),
                 name: "selectedLanguage",
                 inputValue: record.get("id"),
-                checked: record.get("id") === firstRecordId
+                checked: record.get("id") === firstRecordId,
             });
         });
         return languageOptions;
@@ -303,7 +303,7 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
         return language.targets.map(function (target) { return ({
             source: language.source,
             target: target,
-            connector: language.connector
+            connector: language.connector,
         }); });
     };
     IdmediatranslationstudioBundleTranslationRequest.prototype.__showWindowWithoutLanguageOptions = function () {
@@ -321,22 +321,22 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
                     width: 200,
                     height: 100,
                     alt: "",
-                    cls: "floating-logo"
+                    cls: "floating-logo",
                 },
                 {
                     xtype: "component",
                     html: "No translation settings available. Please check your license.",
                     padding: "10",
-                    style: "color: red; font-weight: bold;"
+                    style: "color: red; font-weight: bold;",
                 },
             ],
             buttons: [
                 {
                     text: "Cancel",
                     margin: "0 0 0 5",
-                    handler: function () { return window.close(); }
+                    handler: function () { return window.close(); },
                 },
-            ]
+            ],
         });
         window.show();
     };
@@ -358,7 +358,7 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
                     width: 200,
                     height: 100,
                     alt: "",
-                    cls: "floating-logo"
+                    cls: "floating-logo",
                 },
                 {
                     xtype: "container",
@@ -370,7 +370,7 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
                             xtype: "component",
                             html: "Translation settings:",
                             padding: "10 10 0 10",
-                            top: 10
+                            top: 10,
                         },
                         {
                             xtype: "radiogroup",
@@ -382,8 +382,8 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
                             listeners: {
                                 change: function (_radioGroup, selectedValue) {
                                     IdmediatranslationstudioBundleTranslationRequest.__updateTranslationContainer(selectedValue.selectedLanguage);
-                                }
-                            }
+                                },
+                            },
                         },
                         {
                             id: "machineContainer",
@@ -391,7 +391,7 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
                                 {
                                     xtype: "component",
                                     padding: "0 10",
-                                    html: "Translation Urgency:"
+                                    html: "Translation Urgency:",
                                 },
                                 {
                                     xtype: "radiogroup",
@@ -403,36 +403,36 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
                                             boxLabel: "Translate immediately",
                                             name: "isUrgent",
                                             inputValue: 0,
-                                            checked: true
+                                            checked: true,
                                         },
                                         {
                                             boxLabel: "Normal translation (quota based)",
                                             name: "isUrgent",
-                                            inputValue: 1
+                                            inputValue: 1,
                                         },
-                                    ]
+                                    ],
                                 },
                                 {
                                     xtype: "checkbox",
                                     name: "sendNotification",
                                     boxLabel: "Send email notification on translation status updates",
                                     checked: true,
-                                    padding: "10 15"
+                                    padding: "10 15",
                                 },
-                            ]
+                            ],
                         },
-                    ]
+                    ],
                 },
             ],
             buttons: [
                 {
                     text: "Cancel",
                     margin: "0 0 0 5",
-                    handler: function () { return window.close(); }
+                    handler: function () { return window.close(); },
                 },
                 {
                     xtype: "component",
-                    flex: 1
+                    flex: 1,
                 },
                 {
                     text: '<img src="/bundles/idmediatranslationstudio/img/submit.png" style="height:18px; vertical-align:middle; margin-right:5px;" />Submit translation',
@@ -440,9 +440,9 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
                     flex: 0.7,
                     handler: function () {
                         return IdmediatranslationstudioBundleTranslationRequest.__handleTranslationRequestSubmit(ele, window);
-                    }
+                    },
                 },
-            ]
+            ],
         });
         Ext.defer(function () {
             IdmediatranslationstudioBundleTranslationRequest.__updateTranslationContainer(firstRecordId);
@@ -479,12 +479,12 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
                 language: JSON.stringify(jsonLanguages),
                 isUrgent: isUrgent,
                 machine: machine,
-                notification: notificationCheckbox.getValue()
+                notification: notificationCheckbox.getValue(),
             },
             success: function () { return window.close(); },
             failure: function (response) {
                 return IdmediatranslationstudioBundleBase.showErrorMessage("Serverfehler: ".concat(response.statusText));
-            }
+            },
         });
     };
     IdmediatranslationstudioBundleTranslationRequest.prototype.__onShowWindow = function (ele) {
@@ -505,7 +505,7 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
             },
             failure: function () {
                 return IdmediatranslationstudioBundleBase.showErrorMessage("Fehler beim Abrufen der Sprachen");
-            }
+            },
         });
     };
     IdmediatranslationstudioBundleTranslationRequest.prototype.onReady = function (ele) {
@@ -516,7 +516,7 @@ var IdmediatranslationstudioBundleTranslationRequest = /** @class */ (function (
                 scale: "small",
                 iconCls: "translationstudio-icon",
                 iconAlign: "left",
-                handler: function () { return _this.__onShowWindow(ele); }
+                handler: function () { return _this.__onShowWindow(ele); },
             });
         });
     };
