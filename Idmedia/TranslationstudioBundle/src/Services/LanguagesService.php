@@ -36,7 +36,7 @@ class LanguagesService
             $errorMessage = curl_error($ch);
             $errorCode = curl_errno($ch);
             error_log("cURL Fehler: Code $errorCode - $errorMessage");
-            return ['error' => $errorMessage];
+            return null;
         }
 
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -44,7 +44,8 @@ class LanguagesService
         curl_close($ch);
 
         if ($httpCode !== 200) {
-            return ['error' => "Fehler: HTTP Statuscode $httpCode"];
+            error_log("Cannot fetch languages from $url - status code $httpCode");
+            return null;
         }
 
         return json_decode($response, true);
