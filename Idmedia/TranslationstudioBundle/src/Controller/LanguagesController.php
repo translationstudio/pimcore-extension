@@ -40,9 +40,15 @@ class LanguagesController extends AbstractController
     #[Route('/translationstudio/pimcore/mappings', methods: ['GET'])]
     public function getLanguages(LanguagesService $languagesService): JsonResponse
     {
-        $license = SettingsStore::get('license')?SettingsStore::get('license')->getData():'';
-        $response = $languagesService->sendLanguageRequest($license);
-        return new JsonResponse($response, 200);
+        $license = SettingsStore::get('tslicense');
+        if (!$license)
+            return new JsonResponse(['message' => 'cannot get license'], 500);
+
+        $response = $languagesService->sendLanguageRequest($license->getData());
+        if ($response)
+            return new JsonResponse($response, 200);
+
+        return new JsonResponse(['message' => 'cannot load languages'], 500);
     }
 
     #[Route('/translationstudio/languages', methods: ['GET'])]
