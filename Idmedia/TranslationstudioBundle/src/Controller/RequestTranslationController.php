@@ -18,7 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, see https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use \Pimcore\Controller\FrontendController;
@@ -38,6 +37,6 @@ class RequestTranslationController
     public function sendTranslationRequest(Request $request): JsonResponse
     {
         $response = $this->requestTranslationService->requestTranslation($request);
-        return new JsonResponse(204);    
+        return $response;  
     }
 }
