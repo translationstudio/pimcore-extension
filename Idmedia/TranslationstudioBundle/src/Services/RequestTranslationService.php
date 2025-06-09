@@ -21,6 +21,7 @@ use \Pimcore\Controller\FrontendController;
 use Pimcore\Model\Tool\SettingsStore;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Pimcore\Model\DataObject;
 
 class RequestTranslationService extends FrontendController
@@ -34,26 +35,27 @@ class RequestTranslationService extends FrontendController
         $this->requestStack = $requestStack;
     }
 
-    public function requestTranslation($request)
+    private function getUrl()
+    {
+        return 'https://pimcore.translationstudio.tech/translate';
+    }
+
+    private function createPayload($request)
     {
         $objectId = $request->request->get('id');
         $object = DataObject::getById($objectId);
         
         if (!$objectId) {
-            return $this->json(["success" => false, "message" => "Object ID is missing"], 400);
+            return null;
         }
-        $machine = $request->request->get('machine') === 'true';
-        $isUrgent = $machine || $request->request->get('isUrgent') === 'true';
+
+        $machine = $request->request->get('machine') == 'true';
+        $isUrgent = $machine || $request->request->get('isUrgent') == 'true';
         $language = json_decode($request->request->get('language'), true);
-        $license = SettingsStore::get('license') ? SettingsStore::get('license')->getData() : null;
         $notification = $request->request->get('notification') === 'true';
         $name =  $object->getKey();
         $className = $object->getClassName();
-        if (!$license) {
-            return $this->json(["success" => false, "message" => "Token is missing"], 400);
-        }
         $email = $machine || !$notification ? '':  $this->requestStack->getSession()->get('userEmail');
-        $url = 'https://pimcore.translationstudio.tech/translate';
         $payload = [
             'email' => $email, 
             'project-name' => $className,
@@ -65,7 +67,28 @@ class RequestTranslationService extends FrontendController
                 'name' => $name
             ]
         ];
-        $ch = curl_init($url);
+
+        return $payload;
+    }
+
+    public function requestTranslation($request)
+    {
+        $payload = $this->createPayload($request);
+        if ($payload == null) {
+            error_log("Cannot create payload");
+            return new JsonResponse(
+                ['message' => 'Invalid payload'], 400
+            );
+        }
+
+        $license = SettingsStore::get('tslicense') ? SettingsStore::get('tslicense')->getData() : null;
+        if (!$license) {
+            return new JsonResponse(
+                ['message' => 'License missing'], 500
+            );
+        }
+
+        $ch = curl_init($this->getUrl());
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -79,17 +102,18 @@ class RequestTranslationService extends FrontendController
 
         if ($response === false) {
             $errorMessage = curl_error($ch);
-            return ['message' => $errorMessage];
+            $errorCode = curl_errno($ch);
+            curl_close($ch);
+            error_log("cURL Fehler: Code $errorCode - $errorMessage");
+            return new JsonResponse(
+                ['message' => "Could not perform request: Code $errorCode - $errorMessage"], 500
+            );
         }
 
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         curl_close($ch);
 
-        if ($httpCode !== 204) {
-            return ['error' => "Fehler: HTTP Statuscode $httpCode"];
-        }
-
-        return $httpCode;
+        return new JsonResponse(null, 204);
     }
 }
