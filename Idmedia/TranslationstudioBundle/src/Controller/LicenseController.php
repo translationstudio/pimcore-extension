@@ -31,9 +31,13 @@ class LicenseController extends AbstractController
     #[Route('/translationstudio/pimcore/license', methods: ['POST'])]
     public function saveLicense(Request $request): JsonResponse
     {
-        $license = $request->request->get('license')?:$request->request->get('license');
+        $license = $request->request->get('license');
+        if (!$license) {
+            return new JsonResponse(['message' => 'cannot store license'], 500);
+        }
+
         SettingsStore::set('tslicense', $license);
-        return new JsonResponse(204);
+        return new JsonResponse([], 204);
     }
     
     #[Route('/translationstudio/pimcore/license', methods: ['GET'])]
@@ -74,7 +78,7 @@ class LicenseController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
             if (!$user) {
-                return new JsonResponse(["message" => "Keine email gefunden"], 500);
+                return new JsonResponse(["message" => "Keine email gefunden"], 200);
             }
 
             $pimcoreUser = User::getById($user->getId());
@@ -88,7 +92,7 @@ class LicenseController extends AbstractController
         }
         catch(Exception $exIgnore) 
         {
-            return new JsonResponse([], 500);
+            return new JsonResponse([], 204);
         }
     }
 }
