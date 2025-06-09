@@ -34,6 +34,6 @@ class PingController
     #[Route('/translationstudio', methods: ['GET'])]
     public function cmsPing(): JsonResponse
     {
-        return new JsonResponse(204);
+        return new JsonResponse(null, 204);
     }
 }
